@@ -106,10 +106,22 @@ class Presenter {
 	 */
 	private function _load( $presenter, $data = null )
 	{
+		$path = '';
+
+		// Is the presenter in a sub-folder? If so, parse out the filename and path.
+		if (($last_slash = strrpos($presenter, '/')) !== FALSE)
+		{
+			// The path is in front of the last slash
+			$path = substr($presenter, 0, $last_slash + 1);
+
+			// And the model name behind it
+			$presenter = substr($presenter, $last_slash + 1);
+		}
+		
 		$classname = $presenter.'_presenter';
 		if (!class_exists($classname))
 		{
-			$this->ci->load->file(APPPATH.'/presenters/'.$classname.'.php');
+			$this->ci->load->file(APPPATH.'/presenters/'.$path.$classname.'.php');
 			log_message('debug', "Presenter: Loaded '$classname'.");
 		}
 
